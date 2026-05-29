@@ -1,0 +1,836 @@
+<!-- Replace YOUR-DOMAIN.com before launch -->
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>How to Lock and Password Protect a Folder in OneDrive</title>
+<meta content="Learn how to lock a folder in OneDrive using Personal Vault, built-in features, and third-party encryption to secure your cloud files." name="description"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --color-hero-bg: #08001A;
+      --color-primary-accent: #BF5AF2;
+      --color-primary-accent-2: #FF375F;
+      --color-secondary-accent: #30D158;
+      --color-secondary-accent-2: #40C8E0;
+      --color-content-bg: #F4F0FF;
+      --color-card-surface: #12002B;
+      --color-body-text: #1A0050;
+      --color-heading-text: #1A0050;
+      --color-body-dark: #E8DFFF;
+      --color-border: rgba(26, 0, 80, 0.14);
+      --color-meta-text: rgba(232, 223, 255, 0.78);
+      --color-premium-band: #08001A;
+      --gradient-primary: linear-gradient(135deg, #BF5AF2 0%, #FF375F 100%);
+      --gradient-secondary: linear-gradient(135deg, #30D158 0%, #40C8E0 100%);
+      --gradient-dark: radial-gradient(circle at top left, rgba(191, 90, 242, .26), transparent 35%), radial-gradient(circle at bottom right, rgba(64, 200, 224, .16), transparent 38%), #08001A;
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Manrope', sans-serif;
+      --max-reading-width: 760px;
+      --max-wide-width: 1160px;
+      --section-padding-v: 86px;
+      --radius-card: 22px;
+      --shadow-card: 0 24px 80px rgba(8, 0, 26, 0.16);
+      --transition-speed: 0.25s;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      color: var(--color-body-text);
+      background: var(--color-content-bg);
+      line-height: 1.75;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(26, 0, 80, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(26, 0, 80, .045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent 72%);
+      z-index: -1;
+    }
+    h1, h2, h3, h4, h5, .font-heading {
+      font-family: var(--font-heading);
+      color: var(--color-heading-text);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      letter-spacing: -0.035em;
+    }
+    h2 { font-size: clamp(32px, 4vw, 46px); font-weight: 800; }
+    h3 { font-weight: 700; }
+    a { color: var(--color-primary-accent); text-decoration: none; transition: all var(--transition-speed); font-weight: 700; }
+    a:hover { color: var(--color-primary-accent-2); }
+    img { max-width: 100%; height: auto; display: block; object-fit: contain; }
+    ul, ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+    p { margin-bottom: 1.5rem; }
+    code { background: rgba(191, 90, 242, 0.11); color: #7B1FE8; padding: 0.12rem 0.35rem; border-radius: 8px; }
+
+    .container { max-width: var(--max-reading-width); margin: 0 auto; padding: 0 24px; }
+    .container-wide { max-width: var(--max-wide-width); margin: 0 auto; padding: 0 24px; }
+    .section { padding: var(--section-padding-v) 0; position: relative; }
+    .bg-tint { background: var(--color-content-bg); }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8, 0, 26, 0.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(232, 223, 255, 0.13);
+      height: 74px; display: flex; align-items: center;
+      box-shadow: 0 10px 34px rgba(8, 0, 26, .28);
+    }
+    .header-inner { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .logo { font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: #fff; display: inline-flex; align-items: center; gap: 12px; letter-spacing: -0.015em; }
+    .brand-text { display: inline-block; white-space: nowrap; }
+    .brand-mark { width: 42px; height: 42px; border-radius: 15px; display: inline-grid; place-items: center; background: var(--gradient-primary); box-shadow: 0 0 24px rgba(191, 90, 242, .46), inset 0 0 0 1px rgba(255,255,255,.22); flex: 0 0 auto; }
+    .brand-mark svg { width: 28px; height: 28px; display: block; filter: drop-shadow(0 4px 10px rgba(0,0,0,.22)); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { font-size: 14px; color: rgba(232, 223, 255, 0.82); font-weight: 700; }
+    .nav-links a:hover { color: #fff; }
+    .btn-outline {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 11px 22px; border-radius: 999px; font-weight: 800; font-size: 14px;
+      color: #fff; background: linear-gradient(#08001A, #08001A) padding-box, var(--gradient-primary) border-box;
+      border: 1.5px solid transparent; cursor: pointer;
+      box-shadow: 0 0 0 rgba(191, 90, 242, 0);
+    }
+    .btn-outline:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 12px 36px rgba(191, 90, 242, .28); }
+    .btn-filled {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 13px 28px; border-radius: 999px; font-weight: 800; font-size: 15px;
+      background: var(--gradient-primary); color: #fff; border: none; cursor: pointer;
+      box-shadow: 0 16px 36px rgba(255, 55, 95, .22), 0 0 30px rgba(191, 90, 242, .24);
+    }
+    .btn-filled:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 22px 46px rgba(255, 55, 95, .28), 0 0 44px rgba(191, 90, 242, .32); }
+
+    .hamburger { display: none; background: none; border: none; font-size: 28px; cursor: pointer; color: #fff; }
+    @media (max-width: 768px) {
+      .site-header { height: 68px; }
+      .nav-links { display: none; position: absolute; top: 68px; left: 12px; right: 12px; background: rgba(18, 0, 43, 0.98); flex-direction: column; padding: 24px; border: 1px solid rgba(232, 223, 255, 0.14); border-radius: 22px; box-shadow: var(--shadow-card); }
+      .nav-links.active { display: flex; }
+      .hamburger { display: block; }
+      .brand-text { font-size: 16px; }
+    }
+
+    .hero {
+      background: var(--gradient-dark);
+      color: var(--color-body-dark);
+      padding: 104px 0 72px;
+      text-align: center;
+      border-bottom: 1px solid rgba(232, 223, 255, 0.14);
+      position: relative;
+      overflow: hidden;
+      --orb-x: 50%;
+      --orb-y: 32%;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 600px; height: 600px;
+      left: var(--orb-x); top: var(--orb-y);
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(191,90,242,.28) 0%, rgba(255,55,95,.18) 34%, transparent 68%);
+      border-radius: 999px;
+      filter: blur(4px);
+      pointer-events: none;
+      opacity: .9;
+      transition: opacity .2s ease;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: -120px;
+      background: radial-gradient(circle at 12% 8%, rgba(64,200,224,.14), transparent 28%), radial-gradient(circle at 88% 18%, rgba(48,209,88,.10), transparent 28%);
+      pointer-events: none;
+    }
+    .hero .container { position: relative; z-index: 2; max-width: 920px; }
+    .hero h1 { color: #fff; font-size: clamp(42px, 8vw, 70px); line-height: .92; margin-bottom: 24px; max-width: 960px; margin-inline: auto; font-weight: 800; letter-spacing: -0.06em; }
+    .gradient-text { background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { color: rgba(232, 223, 255, .84); }
+    .meta-bar { display: flex; justify-content: center; gap: 14px; font-size: 14px; color: rgba(232, 223, 255, .72); margin: 28px 0 24px; flex-wrap: wrap; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 720px; margin: 32px auto; }
+    .trust-stat { background: rgba(18,0,43,.68); border: 1px solid rgba(232,223,255,.14); border-top: 3px solid transparent; border-image: var(--gradient-primary) 1; border-radius: 20px; padding: 18px 16px; box-shadow: 0 18px 48px rgba(8,0,26,.28); backdrop-filter: blur(14px); }
+    .stat-number { font-family: var(--font-heading); display: block; font-size: 31px; line-height: 1; font-weight: 800; color: #fff; }
+    .stat-label { display: block; margin-top: 8px; color: rgba(232,223,255,.74); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; }
+    .hero-visual-system { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: center; max-width: 880px; margin: 28px auto 16px; }
+    .protection-visualization { position: relative; width: 210px; height: 210px; margin: 0 auto; display: grid; place-items: center; }
+    .ring { position: absolute; inset: 50%; transform: translate(-50%, -50%); border-radius: 999px; border: 2px solid transparent; background: linear-gradient(#08001A, #08001A) padding-box, var(--gradient-primary) border-box; animation: shieldPulse 3.8s ease-in-out infinite; }
+    .ring.r1 { width: 78px; height: 78px; opacity: 1; animation-delay: 0s; }
+    .ring.r2 { width: 116px; height: 116px; opacity: .6; animation-delay: .45s; }
+    .ring.r3 { width: 154px; height: 154px; opacity: .3; animation-delay: .9s; }
+    .ring.r4 { width: 192px; height: 192px; opacity: .1; animation-delay: 1.35s; }
+    .visual-core { width: 64px; height: 64px; border-radius: 22px; background: var(--gradient-secondary); display: grid; place-items: center; box-shadow: 0 0 46px rgba(64,200,224,.36); z-index: 3; }
+    .visual-core svg { width: 34px; height: 34px; }
+    @keyframes shieldPulse { 0%, 100% { transform: translate(-50%, -50%) scale(.96); } 50% { transform: translate(-50%, -50%) scale(1.08); } }
+    .quick-answer { background: rgba(18, 0, 43, .78); border: 1px solid rgba(232,223,255,.14); border-left: 5px solid transparent; border-image: var(--gradient-primary) 1; padding: 26px; text-align: left; border-radius: 0 var(--radius-card) var(--radius-card) 0; margin: 36px auto; max-width: var(--max-reading-width); box-shadow: 0 24px 70px rgba(8,0,26,.26); }
+    .quick-answer .label { font-family: var(--font-heading); font-size: 12px; text-transform: uppercase; letter-spacing: 1.4px; color: #fff; display: block; margin-bottom: 8px; font-weight: 800; }
+    .quick-answer p { color: rgba(232,223,255,.92); }
+
+    .toc-card { background: rgba(255,255,255,.82); border: 1px solid rgba(26,0,80,.12); border-radius: 28px; padding: 34px; margin: -42px auto 44px; box-shadow: var(--shadow-card); position: relative; z-index: 10; backdrop-filter: blur(18px); }
+    .toc-card h3 { font-size: 18px; margin-bottom: 16px; border-bottom: 1px solid rgba(26,0,80,.11); padding-bottom: 12px; }
+    .toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+    .toc-grid a { font-size: 14px; color: var(--color-body-text); background: rgba(191,90,242,.08); padding: 10px 12px; border-radius: 14px; }
+    .toc-grid a:hover { color: #fff; background: var(--gradient-primary); text-decoration: none; }
+
+    .content-visual { width: 100%; max-width: 860px; height: auto; object-fit: contain; border-radius: 26px; box-shadow: var(--shadow-card); margin: 34px auto; display: block; border: 1px solid rgba(26, 0, 80, .12); background: #fff; }
+    .dark-section .content-visual, .saas-band .content-visual, .hero .content-visual { border-color: rgba(232,223,255,.14); box-shadow: 0 22px 72px rgba(0,0,0,.34), 0 0 0 1px rgba(255,255,255,.05); background: rgba(255,255,255,.04); }
+    .visual-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin: 34px 0; }
+    .visual-grid img { width: 100%; height: 100%; max-height: 330px; object-fit: contain; border-radius: 24px; border: 1px solid rgba(26,0,80,.12); background: rgba(255,255,255,.8); box-shadow: var(--shadow-card); }
+    .dark-section .visual-grid img { border-color: rgba(232,223,255,.14); background: rgba(255,255,255,.04); }
+    .img-fluid-rounded { width: 100%; max-width: 820px; height: auto; object-fit: contain; border-radius: 28px; box-shadow: var(--shadow-card); margin: 34px auto; display: block; border: 1px solid rgba(255,255,255,.16); }
+
+    .section:not(.dark-section):not(.saas-band):not(.final-cta) { background: var(--color-content-bg); }
+    .section:not(.dark-section):not(.saas-band):not(.final-cta) p, .section:not(.dark-section):not(.saas-band):not(.final-cta) li, .section:not(.dark-section):not(.saas-band):not(.final-cta) dd { color: rgba(26, 0, 80, .84); }
+    .dark-section { background: var(--gradient-dark); color: var(--color-body-dark); overflow: hidden; }
+    .dark-section h2, .dark-section h3, .dark-section h4, .dark-section .font-heading { color: #fff; }
+    .dark-section p, .dark-section li, .dark-section dd { color: rgba(232, 223, 255, .83); }
+    .dark-section::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(232,223,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(232,223,255,.04) 1px, transparent 1px); background-size: 54px 54px; pointer-events: none; }
+    .dark-section .container, .dark-section .container-wide { position: relative; z-index: 1; }
+
+    .method-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(26,0,80,.12); padding-bottom: 12px; margin-bottom: 24px; margin-top: 54px; gap: 16px; }
+    .method-header h3 { margin-bottom: 0; }
+    .difficulty-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; font-family: var(--font-heading); font-weight: 800; color: #fff; background: var(--gradient-primary); padding: 8px 12px; border-radius: 999px; white-space: nowrap; }
+    .diff-bars { display: flex; gap: 3px; align-items: flex-end; height: 12px; }
+    .diff-bar { width: 4px; background: rgba(255,255,255,.25); border-radius: 2px; }
+    .diff-bar.filled { background: #fff; }
+    .diff-bars .b1 { height: 6px; } .diff-bars .b2 { height: 9px; } .diff-bars .b3 { height: 12px; }
+
+    .step-block { position: relative; background: rgba(255,255,255,.62); border: 1px solid rgba(26,0,80,.12); border-radius: 22px; padding: 22px 22px 22px 24px; margin-bottom: 22px; box-shadow: 0 16px 46px rgba(8,0,26,.08); overflow: hidden; transition: transform .25s ease, box-shadow .25s ease; }
+    .step-block:hover { transform: translateY(-4px); box-shadow: 0 20px 56px rgba(191,90,242,.18), 0 0 0 1px rgba(191,90,242,.12); }
+    .dark-section .step-block { background: rgba(18,0,43,.68); border-color: rgba(232,223,255,.12); box-shadow: 0 24px 64px rgba(0,0,0,.24); }
+    .dark-section .step-block:hover { box-shadow: 0 24px 70px rgba(191,90,242,.28), 0 0 0 1px rgba(255,55,95,.18); }
+    .step-block > div { position: relative; z-index: 2; }
+    .step-num { display: inline-grid; place-items: center; width: 34px; height: 34px; background: var(--gradient-primary); color: #fff; border-radius: 50%; text-align: center; line-height: 34px; font-weight: 800; font-size: 14px; margin-right: 12px; box-shadow: 0 0 26px rgba(191,90,242,.36); }
+    .steps-track { position: relative; padding-left: 8px; }
+    .step-progress-svg { position: absolute; left: 24px; top: 18px; width: 36px; height: calc(100% - 36px); pointer-events: none; z-index: 0; overflow: visible; }
+    .step-progress-base { stroke: rgba(232,223,255,.12); stroke-width: 4; fill: none; stroke-linecap: round; }
+    .step-progress-line { stroke: url(#stepGradient); stroke-width: 4; fill: none; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .12s linear; }
+
+    .callout { background: rgba(255,255,255,.76); border: 1px solid rgba(26,0,80,.12); border-left: 5px solid transparent; border-image: var(--gradient-primary) 1; padding: 24px; border-radius: 0 22px 22px 0; margin: 28px 0; box-shadow: 0 16px 48px rgba(8,0,26,.08); }
+    .dark-section .callout { background: rgba(18,0,43,.68); border-color: rgba(232,223,255,.14); color: var(--color-body-dark); }
+
+    .saas-band { background: var(--gradient-dark); color: #fff; padding: 108px 0; overflow: hidden; position: relative; }
+    .saas-band::before { content: ""; position: absolute; width: 460px; height: 460px; border-radius: 999px; right: -150px; top: -90px; background: radial-gradient(circle, rgba(255,55,95,.26), transparent 68%); }
+    .saas-band h2, .saas-band h3 { color: #fff; }
+    .saas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; position: relative; z-index: 1; }
+    .saas-subtext { color: rgba(232,223,255,0.84); font-size: 18px; margin-bottom: 32px; }
+    .mockup-container { background: linear-gradient(145deg, rgba(191,90,242,.24), rgba(18,0,43,.92)); padding: 16px; border-radius: 28px; box-shadow: 0 32px 90px rgba(0,0,0,0.38), 0 0 64px rgba(191,90,242,.2); border: 1px solid rgba(255,255,255,0.13); }
+    .mockup-inner { background: rgba(255,255,255,.05); border-radius: 18px; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--color-meta-text); font-family: var(--font-heading); overflow: hidden; }
+    .feature-chip-row { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+    .feature-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,.12); padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #fff; }
+    .btn-white { background: var(--gradient-secondary); color: #08001A; border: none; box-shadow: 0 18px 44px rgba(64,200,224,.22); }
+    .btn-white:hover { color: #08001A; }
+
+    .dl-feature { position: relative; border: 1px solid rgba(232,223,255,.12); border-top: 1px solid rgba(232,223,255,.12); padding: 26px; display: grid; grid-template-columns: 1fr 2fr; gap: 24px; border-radius: 24px; background: rgba(18,0,43,.72); margin-bottom: 18px; overflow: hidden; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .dl-feature::before { content: ""; position: absolute; top: 0; left: 0; width: 64px; height: 64px; background: var(--gradient-primary); clip-path: polygon(0 0, 100% 0, 0 100%); opacity: .95; }
+    .dl-feature::after { content: ""; position: absolute; left: 18px; top: 18px; width: 34px; height: 34px; border-radius: 12px; background: var(--gradient-secondary); box-shadow: 0 0 28px rgba(48,209,88,.24); }
+    .dl-feature:hover { transform: translateY(-5px); border-color: rgba(191,90,242,.52); box-shadow: 0 26px 70px rgba(191,90,242,.24), 0 0 40px rgba(255,55,95,.16); }
+    .dl-feature dt { font-family: var(--font-heading); font-weight: 800; color: #fff; padding-left: 54px; position: relative; z-index: 1; }
+    .dl-feature dd { margin: 0; color: rgba(232,223,255,.82); position: relative; z-index: 1; }
+
+    .matrix-widget { background: rgba(255,255,255,.76); border: 1px solid rgba(26,0,80,.13); border-radius: 26px; padding: 26px; margin: 34px 0; box-shadow: var(--shadow-card); }
+    .matrix-tabs { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .matrix-tab { padding: 10px 17px; border-radius: 999px; background: rgba(191,90,242,.1); border: 1px solid rgba(26,0,80,.1); cursor: pointer; font-size: 14px; font-weight: 800; color: var(--color-body-text); }
+    .matrix-tab.active { background: var(--gradient-primary); color: #fff; border-color: transparent; box-shadow: 0 12px 32px rgba(191,90,242,.22); }
+    .matrix-content { display: none; }
+    .matrix-content.active { display: block; animation: fadeIn 0.3s; }
+    .matrix-content h4 { background: var(--gradient-primary); color: #fff; margin: -4px -4px 16px; padding: 14px 18px; border-radius: 18px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .faq-masonry { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; align-items: start; }
+    .faq-card { background: rgba(255,255,255,.74); padding: 0; border-radius: 24px; border: 1px solid rgba(26,0,80,.12); box-shadow: 0 18px 50px rgba(8,0,26,.08); overflow: hidden; transition: box-shadow .25s ease, transform .25s ease; }
+    .faq-card:hover { transform: translateY(-3px); box-shadow: 0 22px 60px rgba(191,90,242,.16); }
+    .faq-card.open { border-left: 5px solid transparent; border-image: var(--gradient-primary) 1; animation: faqPulse .72s ease-out 1; }
+    @keyframes faqPulse { 0% { box-shadow: 0 0 0 0 rgba(191,90,242,.42); } 100% { box-shadow: 0 22px 60px rgba(191,90,242,.12), 0 0 0 18px rgba(191,90,242,0); } }
+    .faq-toggle { width: 100%; border: none; background: transparent; color: var(--color-heading-text); font-family: var(--font-heading); font-size: 16px; font-weight: 800; text-align: left; padding: 22px 54px 22px 22px; cursor: pointer; position: relative; }
+    .faq-toggle::after { content: "+"; position: absolute; right: 22px; top: 18px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--gradient-primary); color: #fff; font-family: var(--font-heading); font-weight: 800; }
+    .faq-card.open .faq-toggle::after { content: "−"; }
+    .faq-card h3 { margin: 0; }
+    .faq-answer { font-size: 15px; margin: 0; padding: 0 22px 22px; display: none; }
+    .faq-card.open .faq-answer { display: block; animation: fadeIn .25s ease; }
+
+    .final-cta { background: var(--gradient-primary); color: #fff; overflow: hidden; }
+    .final-cta::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 20% 20%, rgba(255,255,255,.24), transparent 26%), radial-gradient(circle at 80% 20%, rgba(64,200,224,.22), transparent 32%); pointer-events: none; }
+    .final-cta .container { position: relative; z-index: 1; }
+    .final-cta h2 { color: #fff; }
+    .final-cta p { color: rgba(255,255,255,.9) !important; }
+    .final-cta .btn-filled { background: #fff; color: #1A0050; box-shadow: 0 18px 50px rgba(8,0,26,.16); }
+    .final-cta .btn-filled:hover { color: #1A0050; }
+    .final-cta .btn-outline { background: linear-gradient(rgba(255,255,255,.14), rgba(255,255,255,.14)) padding-box, linear-gradient(135deg, #fff, rgba(255,255,255,.38)) border-box; color: #fff; }
+
+    .site-footer { background: #08001A; color: #fff; padding: 68px 0 36px; text-align: center; border-top: 1px solid rgba(232,223,255,.12); }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 24px; flex-wrap: wrap; }
+    .footer-links a { color: rgba(232,223,255,.82); font-size: 14px; }
+    .footer-links a:hover { color: #fff; }
+    .footer-disclosure { font-size: 13px; color: rgba(232,223,255,0.55); max-width: 600px; margin: 0 auto 24px; }
+
+    @media (max-width: 900px) {
+      .saas-grid { grid-template-columns: 1fr; }
+      .hero-visual-system { grid-template-columns: 1fr; }
+      .visual-grid { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .hero { padding: 84px 0 56px; --orb-x: 50%; --orb-y: 28%; }
+      .hero::before { width: 360px; height: 360px; }
+      .protection-visualization { transform: scale(.82); }
+      .section { padding: 64px 0; }
+      .dl-feature { grid-template-columns: 1fr; gap: 10px; }
+      .method-header { align-items: flex-start; flex-direction: column; }
+      .toc-card { padding: 24px; }
+      .img-fluid-rounded, .content-visual { border-radius: 22px; }
+    }
+</style>
+</head>
+<body>
+<!-- Header -->
+<header class="site-header">
+<div class="container-wide header-inner">
+<div class="logo"><span aria-hidden="true" class="brand-mark"><svg focusable="false" role="img" viewbox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 5.5 52 13v15.8c0 13.1-8.3 24.7-20 29.7-11.7-5-20-16.6-20-29.7V13l20-7.5Z" fill="rgba(255,255,255,.95)"></path><path d="M23 30.5h18a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3H23a3 3 0 0 1-3-3v-11a3 3 0 0 1 3-3Z" fill="#08001A"></path><path d="M25.5 30.5v-4.2a6.5 6.5 0 0 1 13 0v4.2" fill="none" stroke="#08001A" stroke-linecap="round" stroke-width="4"></path><circle cx="32" cy="39" fill="#40C8E0" r="2.7"></circle></svg></span><span class="brand-text">OneDrive Security Hub</span></div>
+<nav class="nav-links" id="nav-menu">
+<a href="#overview">Guide</a>
+<a href="#methods">Methods</a>
+<a href="#comparison">Comparison</a>
+<a href="#faq">FAQ</a>
+<a class="btn-outline" href="#recommendation">See Our Top Pick →</a>
+</nav>
+<button aria-label="Toggle menu" class="hamburger" id="mobile-toggle">☰</button>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="hero"><div class="hero-orb"></div>
+<div class="container">
+<div style="font-size: 13px; color: var(--color-meta-text); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Cloud Storage Security</div>
+<h1>How to <span class="gradient-text">Lock and Password Protect</span> a Folder in OneDrive</h1>
+<p style="font-size: 19px; max-width: 700px; margin: 0 auto; color: var(--color-meta-text);">
+        Whether you are hiding sensitive personal documents or securing confidential business files, locking a folder in OneDrive requires understanding Microsoft's built-in limits—and when to use external encryption.
+      </p>
+<div class="meta-bar">
+<span>Editorial Team</span> • <span>Updated: May 2026</span> • <span>12 min read</span>
+</div>
+<div aria-hidden="true" class="hero-visual-system">
+<div class="protection-visualization">
+<span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="ring r4"></span>
+<span class="visual-core"><svg viewbox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 6 52 14v15c0 13-8 24-20 29C20 53 12 42 12 29V14l20-8Z" fill="rgba(8,0,26,.92)"></path><path d="M23 32h18v15H23z" fill="#fff"></path><path d="M25 32v-6a7 7 0 0 1 14 0v6" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="5"></path></svg></span>
+</div>
+<div class="hero-stats">
+<div class="trust-stat"><span class="stat-number" data-count="2026">0</span><span class="stat-label">Updated Guide</span></div>
+<div class="trust-stat"><span class="stat-number" data-count="12">0</span><span class="stat-label">Min Read</span></div>
+<div class="trust-stat"><span class="stat-number" data-count="256">0</span><span class="stat-label">AES Encryption</span></div>
+</div>
+</div>
+
+<img alt="Folder Lock 10 promotional poster highlighting data protection and secure cloud backup for OneDrive" class="img-fluid-rounded" decoding="async" loading="lazy" src="https://i.ibb.co/C3dwdr7Z/folder-lock-10-promotional-poster-newsoftwares.jpg"/>
+<div class="quick-answer">
+<span class="label">Quick Answer</span>
+<p style="margin: 0; font-weight: 600;">Does regular OneDrive have an auto-lock feature? No. To lock a folder in OneDrive, you must move it into <strong>OneDrive Personal Vault</strong>, which requires 2FA to unlock. Alternatively, for stronger security or for business accounts that don't have Personal Vault, you must encrypt the folder using third-party software before syncing it to the cloud.</p>
+</div>
+</div>
+</section>
+<!-- Table of Contents -->
+<div class="container">
+<div class="toc-card">
+<h3 class="font-heading">Guide Contents</h3>
+<div class="toc-grid">
+<a href="#overview">Understanding OneDrive Security</a>
+<a href="#personal-vault">Method 1: Personal Vault</a>
+<a href="#recommendation">Method 2: Encryption Software (Recommended)</a>
+<a href="#comparison">Cloud Security Matrix</a>
+<a href="#compliance">HIPAA &amp; GDPR Compliance</a>
+<a href="#troubleshooting">Troubleshooting &amp; Access Recovery</a>
+<a href="#faq">Frequently Asked Questions</a>
+</div>
+</div>
+</div>
+<!-- S3: Overview -->
+<section class="section" id="overview">
+<div class="container">
+<h2>Understanding How to Lock a Folder in OneDrive</h2>
+<p>When searching for a <strong>OneDrive folder lock</strong> solution, most users assume they can simply right-click a folder and add a password. Unfortunately, Windows 10, Windows 11, and macOS do not offer native password protection for individual folders that sync seamlessly with cloud storage.</p><img alt="Secure cloud storage visualization showing protected OneDrive files behind a digital shield" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/ks87GMGG/Secured-Cloud.jpg"/>
+<p>OneDrive secures your files <em>in transit</em> and <em>at rest</em> on Microsoft's servers, but if someone gains access to your logged-in PC or phone, your standard OneDrive files are entirely exposed. A locked OneDrive folder requires an additional layer of authentication.</p>
+<p>In this guide, we cover the exact methods to restrict cloud folder access, evaluate the security of Microsoft's native features, and show you how to lock your OneDrive folder on PC, Mac, and mobile securely.</p>
+</div>
+</section>
+<!-- S4: Methods Guide -->
+<section class="section bg-tint" id="methods">
+<div class="container">
+<h2>How to Lock a Folder in OneDrive — 2026 Guide</h2>
+<p>There are three distinct layers to cloud file protection. Let's look at the functional methods available to you right now.</p><img alt="Data protection vault illustration representing locked OneDrive folders and extra authentication" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/bMzYGK6K/Data-Protection-Vault.jpg"/>
+<div class="method-header">
+<h3 data-difficulty="1" id="personal-vault">OneDrive Personal Vault: Setup and Use</h3>
+</div>
+<p>Microsoft offers a native solution called <strong>Personal Vault</strong>. It is a protected area in OneDrive that requires a strong authentication method or a second step of identity verification, such as your fingerprint, face, PIN, or a code sent to you via email or SMS.</p><img alt="Personal Vault analogy showing private files stored inside a locked digital safe" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/Y4PCmGNW/Data-Vault-Analogy.jpg"/>
+<div class="step-block">
+<div style="font-weight: 600; margin-bottom: 8px;"><span class="step-num">1</span> Enable Personal Vault</div>
+<p>Open your OneDrive folder on your PC or the mobile app. Double-click the "Personal Vault" icon (it looks like a safe). Follow the prompts to verify your identity.</p>
+</div>
+<div class="step-block">
+<div style="font-weight: 600; margin-bottom: 8px;"><span class="step-num">2</span> Move your files</div>
+<p>Drag and drop the files or folders you want to lock directly into the Personal Vault. These files will now sync securely.</p>
+</div>
+<div class="step-block">
+<div style="font-weight: 600; margin-bottom: 8px;"><span class="step-num">3</span> Auto-lock behavior</div>
+<p>The vault automatically locks after 20 minutes of inactivity on a PC (or 3 minutes on mobile). You can right-click and select "Lock" to secure it immediately.</p>
+</div>
+<div class="callout">
+<strong>The Limitations of Personal Vault:</strong>
+<ul style="margin-top: 12px; margin-bottom: 0;">
+<li>Free OneDrive users can only store a maximum of 3 files in the vault.</li>
+<li>It is strictly for personal accounts. <em>OneDrive for Business</em> users do not have access to Personal Vault.</li>
+<li>You cannot share files from inside the Personal Vault.</li>
+</ul>
+</div>
+<div class="method-header">
+<h3 data-difficulty="3">Password Protect Files Before Syncing to OneDrive</h3>
+</div>
+<p>If you need to lock more than three files, share sensitive documents securely via the cloud, or use a business account, you must employ <strong><a href="https://www.windowscentral.com/how-encrypt-data-storing-it-cloud-and-why-you-should" rel="noopener noreferrer" target="_blank">client-side encryption</a></strong>. This means you lock the folder using software on your PC <em>before</em> OneDrive syncs it to the cloud.</p><img alt="Secure folder synchronization concept showing encrypted files syncing safely to cloud storage" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/WvSS7JHb/Secure-Folder-Synchronization.jpg"/>
+<p>By doing this, even if Microsoft's servers are breached, or an unauthorized user accesses your PC, the files remain unreadable without your master password.</p>
+</div>
+</section>
+<!-- S5: Premium SaaS Moment (Why Recommend Folder Lock) -->
+<section class="saas-band" id="recommendation">
+<div class="container-wide saas-grid">
+<div>
+<span style="text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px; font-weight: 700; color: var(--color-secondary-accent);">Editorial Recommendation</span>
+<h2 style="font-size: 36px; margin-top: 12px;">The Best <a href="https://cloudstorageinfo.org/folder-lock-review" rel="noopener noreferrer" target="_blank">Folder Lock</a> Software for Desktop &amp; Mobile</h2>
+<p class="saas-subtext">For users who need to <a href="https://proprivacy.com/guides/encrypt-files-windows" rel="noopener noreferrer" target="_blank">encrypt files</a> before cloud upload, or business users lacking Personal Vault, we recommend <strong>Folder Lock</strong>. It deploys zero-knowledge <a href="https://psbios.com/file-encryption-explained/" rel="noopener noreferrer" target="_blank">AES-256 encryption</a> on your local drive before OneDrive syncs, and supports seamless multi-device decryption across Windows, macOS, iOS, and Android.</p>
+<div class="feature-chip-row">
+<span class="feature-chip">AES-256 Encryption</span>
+<span class="feature-chip">Zero-Knowledge</span>
+<span class="feature-chip">Cloud-Sync Compatible</span>
+<span class="feature-chip">Mac &amp; Mobile Apps</span>
+</div>
+<div style="display: flex; gap: 16px; flex-wrap: wrap;">
+<a class="btn-filled btn-white" href="https://www.newsoftwares.net/download/folderlock10-en/folder-lock-en.exe" rel="noopener noreferrer" target="_blank">Try Folder Lock Free →</a>
+<a class="btn-outline" href="https://store.newsoftwares.net/?add=fl10" rel="noopener noreferrer" style="border-color: rgba(255,255,255,0.4); color: #fff;" target="_blank">Get Full Version →</a>
+</div>
+</div>
+<div class="mockup-container">
+<div class="mockup-inner" style="height: auto; padding: 0; background: transparent;">
+<img alt="Folder Lock desktop dashboard showing encrypted lockers ready for OneDrive synchronization" decoding="async" loading="lazy" src="https://i.ibb.co/Q713yG79/Folder-Lock-locker.jpg" style="width: 100%; height: auto; object-fit: contain; border-radius: 8px;"/>
+</div><img alt="Folder Lock 10 main screen showing protected lockers and security tools for cloud-ready encryption" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/ynCZTHt1/folder-lock-10-main-screen.png" style="margin-top:22px;"/>
+</div>
+</div>
+</section>
+<!-- S7: Core Features (V7 Definition List) -->
+<section class="section dark-section feature-section">
+<div class="container">
+<h2>Why Client-Side Encryption Outperforms Native Cloud Locks</h2>
+<p>If you choose to use a dedicated program like Folder Lock instead of relying purely on OneDrive's native permissions, here is how the mechanics differ:</p>
+<img alt="Illustration of Folder Lock mobile app syncing encrypted backups securely to cloud services" class="img-fluid-rounded" decoding="async" loading="lazy" src="https://i.ibb.co/5yM4Kh6/folder-lock-android-cloud-backup-dropbox.jpg" style="max-height: 400px; margin-top: 0;"/>
+
+<div class="visual-grid">
+<img alt="Cross-platform synchronization graphic showing protected files moving between desktop and mobile devices" decoding="async" loading="lazy" src="https://i.ibb.co/jZfz7Hzz/Cross-Platform-Synchronization.jpg"/>
+<img alt="Folder Lock 10 linked devices screen showing secure synchronization across devices" decoding="async" loading="lazy" src="https://i.ibb.co/spkb32jb/folder-lock-10-screenshot-sync-linked-devices.png"/>
+</div>
+<dl class="dl-feature">
+<dt>Zero-Knowledge Cloud Encryption</dt>
+<dd>When you lock a file locally, the encrypted data is synced to OneDrive. Microsoft never holds your encryption key, meaning neither rogue employees nor server breaches can expose your data.</dd>
+</dl>
+<dl class="dl-feature">
+<dt>Secure Cloud Collaboration</dt>
+<dd>Unlike Personal Vault, you can share an encrypted folder via OneDrive. The recipient simply enters the predetermined password to decrypt the contents locally on their machine.</dd>
+</dl>
+<dl class="dl-feature">
+<dt>Portability Across Platforms</dt>
+<dd>If you migrate from OneDrive to Google Drive or Dropbox, your folders remain locked. The security is tied to the file itself, not the cloud provider's ecosystem.</dd>
+</dl>
+<dl class="dl-feature">
+<dt>Cross-Device Synchronization</dt>
+<dd>By utilizing a robust security suite that offers dedicated applications for macOS, iOS, and Android, your encrypted cloud containers are never tethered to a single computer. You can securely retrieve and decrypt your documents on your smartphone or MacBook while commuting.</dd>
+</dl>
+<dl class="dl-feature">
+<dt>Expanded Storage Limits</dt>
+<dd>While Microsoft restricts non-paying users to a strictly enforced three-file limit within the native Personal Vault, third-party encryption tools frequently provide up to 1GB of encrypted locker space on their free tiers. Upgrading unlocks unlimited encrypted capacity and allows simultaneous syncing across up to five different devices.</dd>
+</dl>
+</div>
+</section>
+<!-- S9: Tutorial -->
+<section class="section dark-section how-it-works">
+<div class="container">
+<h2>How to Lock OneDrive Folder with Password (Using Folder Lock)</h2>
+<p>To implement client-side encryption before cloud upload, follow this workflow:</p><img alt="Folder Lock 10 desktop locker screen for creating a local encrypted OneDrive container" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/210hR8f6/folder-lock-10-desktop-locker-screen.png"/>
+<div class="steps-track"><svg aria-hidden="true" class="step-progress-svg" preserveaspectratio="none" viewbox="0 0 24 100"><defs><lineargradient id="stepGradient" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#BF5AF2"></stop><stop offset="100%" stop-color="#40C8E0"></stop></lineargradient></defs><path class="step-progress-base" d="M12 2 L12 98" pathlength="1"></path><path class="step-progress-line" d="M12 2 L12 98" pathlength="1"></path></svg><div class="step-block">
+<div style="font-weight: 600; margin-bottom: 8px;"><span class="step-num">1</span> Create a Local Locker</div>
+<p>Open Folder Lock and create a new "Locker". Assign it a strong master password. Crucially, save this Locker file directly inside your local OneDrive sync folder (e.g., <code>C:\Users\Name\OneDrive\SecureLocker.flka</code>).</p>
+</div><div class="step-block">
+<div style="font-weight: 600; margin-bottom: 8px;"><span class="step-num">2</span> Mount and Add Files</div>
+<p>Open the Locker. It will mount as a virtual drive on your PC. Drag your sensitive business files or personal documents into this drive.</p>
+</div><div class="step-block">
+<div style="font-weight: 600; margin-bottom: 8px;"><span class="step-num">3</span> Close to Encrypt and Sync</div>
+<p>When you close the Locker, the virtual drive unmounts. Folder Lock encrypts the container. OneDrive will instantly detect the modified file and sync the encrypted, password-protected blob to the cloud.</p>
+</div><div class="step-block">
+<div style="font-weight: 600; margin-bottom: 8px;"><span class="step-num">4</span> Access on the Go</div>
+<p>Because the secure container lives inside your synced cloud directory, you can install the companion security app on your iPhone or Android device. Navigate to the synced locker file on your mobile device, enter your master password, and securely view your files anywhere.</p>
+</div></div>
+
+
+
+<img alt="Proactive data security concepts demonstrating how Folder Lock protects files locally before OneDrive uploads" class="img-fluid-rounded" decoding="async" loading="lazy" src="https://i.ibb.co/V00KXtpW/folder-lock-10-social-media-ad-proactive-data-security.jpg" style="max-height: 400px;"/>
+</div>
+</section>
+<!-- Interactive Matrix (S8 / Security Feature Comparison) -->
+<section class="section" id="comparison">
+<div class="container">
+<h2>Cloud Security Comparison Matrix</h2>
+<p>How does OneDrive's security stack up against the competition? Use this tool to compare native locking features across the major cloud providers.</p><img alt="Cloud security comparison visual for encrypted syncing across OneDrive Dropbox iCloud and Google Drive" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/xqgxb3Pj/syncing-files-securely-onedrive-dropbox-icloud-and-google-drive.jpg"/>
+<div class="matrix-widget">
+<div class="matrix-tabs">
+<button class="matrix-tab active" onclick="switchTab('tab-onedrive')">Microsoft OneDrive</button>
+<button class="matrix-tab" onclick="switchTab('tab-gdrive')">Google Drive</button>
+<button class="matrix-tab" onclick="switchTab('tab-dropbox')">Dropbox</button>
+</div>
+<div class="matrix-content active" id="tab-onedrive">
+<h4 class="font-heading">OneDrive Security Profile</h4>
+<ul style="margin-bottom: 0;">
+<li><strong>Native Folder Lock:</strong> Yes, via Personal Vault (2FA required).</li>
+<li><strong>Zero-Knowledge Encryption:</strong> No. Microsoft holds the encryption keys.</li>
+<li><strong>Password Protect Shared Links:</strong> Yes (Premium/Business accounts only).</li>
+<li><strong>Best for:</strong> Deep Windows integration and Microsoft 365 users.</li>
+</ul>
+</div>
+<div class="matrix-content" id="tab-gdrive">
+<h4 class="font-heading">Google Drive Security Profile</h4>
+<ul style="margin-bottom: 0;">
+<li><strong>Native Folder Lock:</strong> No native PIN/password for specific folders on desktop.</li>
+<li><strong>Zero-Knowledge Encryption:</strong> No. Google holds the keys (though Client-Side Encryption is available for Enterprise).</li>
+<li><strong>Password Protect Shared Links:</strong> No native password feature (relies on Google account permissions).</li>
+<li><strong>Best for:</strong> Real-time collaboration, not ultra-secure storage.</li>
+</ul>
+</div>
+<div class="matrix-content" id="tab-dropbox">
+<h4 class="font-heading">Dropbox Security Profile</h4>
+<ul style="margin-bottom: 0;">
+<li><strong>Native Folder Lock:</strong> Vault feature available on Plus/Family/Professional plans.</li>
+<li><strong>Zero-Knowledge Encryption:</strong> No. Dropbox holds the keys.</li>
+<li><strong>Password Protect Shared Links:</strong> Yes (Paid plans).</li>
+<li><strong>Best for:</strong> Fast syncing, though privacy relies heavily on the provider.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Deep Dives -->
+<section class="section bg-tint" id="compliance">
+<div class="container">
+<h2>Compliance Considerations for How to Lock a Folder in OneDrive</h2>
+<p>If you are storing confidential business files, you must be aware of regulatory standards.</p><img alt="Microsoft 365 security illustration for compliance-focused OneDrive protection planning" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/S4KrpkM2/microsoft-365-security.jpg"/>
+<h3 class="font-heading" style="font-size: 20px;">HIPAA and GDPR Compliance</h3>
+<p>While Microsoft provides a Business Associate Agreement (BAA) for HIPAA compliance on enterprise plans, standard OneDrive is not suitable for PHI (Protected Health Information) without additional encryption. If you rely solely on folder permissions, a compromised laptop could result in a severe data breach.</p>
+<h3 class="font-heading" style="font-size: 20px;">Permissions vs Encryption</h3>
+<p>What cloud providers don't tell you is the difference between permissions and encryption. Restricting cloud folder access by removing someone's email from the share list (permissions) does not protect the data on the server. True protection requires encrypting the data so that even if access is bypassed, the files remain illegible.</p>
+</div>
+</section>
+<!-- Troubleshooting -->
+<section class="section" id="troubleshooting">
+<div class="container">
+<h2>Troubleshooting &amp; Access Recovery</h2>
+<p>If you are locked out of your files, here are the owner-verified methods to regain access safely.</p><img alt="Locked drive technology illustration for recovering and troubleshooting protected OneDrive files" class="content-visual" decoding="async" loading="lazy" src="https://i.ibb.co/B5FrzdY8/Drive-Locked-Technology.jpg"/>
+<h3 class="font-heading" style="font-size: 20px;">OneDrive Personal Vault is missing or not syncing</h3>
+<p>If the Personal Vault icon disappears, ensure your Windows 10/11 system is fully updated. Sometimes, clearing the OneDrive cache (running <code>%localappdata%\Microsoft\OneDrive\onedrive.exe /reset</code>) forces the vault to reappear. Note: this does not delete your files.</p>
+<h3 class="font-heading" style="font-size: 20px;">OneDrive file is locked for shared use / excel onedrive lock file .~lock</h3>
+<p>If you see an error that a file is locked for editing, or notice a <code>.~lock</code> file next to your Excel document, this is a file-locking mechanism to prevent collaboration conflicts, not a security password lock. To resolve this, ask the other user to close the document, or wait 10 minutes for the server to clear the active session.</p>
+<h3 class="font-heading" style="font-size: 20px;">Forgot your Folder Lock password?</h3>
+<p>If you used client-side software like Folder Lock and forgot the password, there is no backdoor—this is the nature of military-grade encryption. To recover access, you must locate your original license email and contact the vendor's support team to verify account ownership, or check if you saved the master key in a secure password manager like 1Password.</p>
+</div>
+</section>
+<!-- FAQ V2 -->
+<section class="section bg-tint" id="faq">
+<div class="container">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-masonry">
+<div class="faq-card open">
+<h3><button aria-expanded="true" class="faq-toggle" type="button">Does OneDrive have a built-in folder lock feature?</button></h3>
+<p class="faq-answer">For personal accounts, yes—it is called Personal Vault. It requires two-factor authentication to open. However, standard folders cannot be password-protected natively without third-party software.</p>
+</div>
+<div class="faq-card">
+<h3><button aria-expanded="false" class="faq-toggle" type="button">Can I password protect individual files in OneDrive?</button></h3>
+<p class="faq-answer">You can use application-level protection (like <a href="https://www.avast.com/c-password-protect-file-folder-windows" rel="noopener noreferrer" target="_blank">adding a password</a> to a Microsoft Word or Excel document via the "File &gt; Info &gt; Protect Document" menu) before saving it to OneDrive. For bulk files, a locked folder is more efficient.</p>
+</div>
+<div class="faq-card">
+<h3><button aria-expanded="false" class="faq-toggle" type="button">How to lock a folder in OneDrive on Android?</button></h3>
+<p class="faq-answer">Open the OneDrive app, tap on "Me" &gt; "Settings" &gt; "App lock" to require a PIN or biometric scan to open the app. Alternatively, access your Personal Vault via the app, which natively requires fingerprint or PIN authentication.</p>
+</div>
+<div class="faq-card">
+<h3><button aria-expanded="false" class="faq-toggle" type="button">Can cloud service employees access my files?</button></h3>
+<p class="faq-answer">By default, data is encrypted at rest on Microsoft's servers, but Microsoft holds the keys. Under specific legal circumstances or security audits, they technically can access standard files. If you use client-side encryption (like Folder Lock), they cannot read your data under any circumstances.</p>
+</div>
+<div class="faq-card">
+<h3><button aria-expanded="false" class="faq-toggle" type="button">Is data stored in the cloud truly encrypted?</button></h3>
+<p class="faq-answer">Yes, but there is a difference between "<a href="https://elearningindustry.com/how-to-secure-elearning-cloud-storage-and-data-in-transit" rel="noopener noreferrer" target="_blank">encryption in transit</a>" (protecting data as it travels over the internet) and "zero-knowledge encryption" (where only you hold the key). Standard cloud storage uses the former; true privacy requires the latter.</p>
+</div>
+<div class="faq-card">
+<h3><button aria-expanded="false" class="faq-toggle" type="button">Can I open my locked OneDrive folder on my iPhone or Mac?</button></h3>
+<p class="faq-answer">If you are using OneDrive's Personal Vault, yes, via the official OneDrive mobile app or macOS sync client. If you are using third-party encryption like Folder Lock, you must install their dedicated macOS, iOS, or Android app to unlock the synced container natively on those specific devices.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="section final-cta">
+<div class="container" style="text-align: center;">
+<h2>Our Verdict</h2>
+<img alt="All-new Folder Lock 10 security software banner showing modern data protection features" class="img-fluid-rounded" decoding="async" loading="lazy" src="https://i.ibb.co/QFbN84jx/folder-lock-10-social-media-ad-all-new.jpg"/>
+<p style="max-width: 600px; margin: 0 auto 32px;">
+        For light, personal use, OneDrive's Personal Vault is a great free tool. But if you are handling sensitive client data, collaborating securely, or need to bypass Microsoft's three-file limit on free accounts, client-side encryption is mandatory. We highly recommend using a dedicated security tool to lock your folders before they ever touch the cloud.
+      </p>
+<div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+<a class="btn-filled" href="https://www.newsoftwares.net/download/folderlock10-en/folder-lock-en.exe" rel="noopener noreferrer" target="_blank">Try Folder Lock Free →</a>
+<a class="btn-outline" href="https://store.newsoftwares.net/?add=fl10" rel="noopener noreferrer" target="_blank">View Full Version Pricing →</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="site-footer">
+<div class="container">
+<div class="logo" style="margin-bottom: 24px; justify-content: center;"><span aria-hidden="true" class="brand-mark"><svg focusable="false" role="img" viewbox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 5.5 52 13v15.8c0 13.1-8.3 24.7-20 29.7-11.7-5-20-16.6-20-29.7V13l20-7.5Z" fill="rgba(255,255,255,.95)"></path><path d="M23 30.5h18a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3H23a3 3 0 0 1-3-3v-11a3 3 0 0 1 3-3Z" fill="#08001A"></path><path d="M25.5 30.5v-4.2a6.5 6.5 0 0 1 13 0v4.2" fill="none" stroke="#08001A" stroke-linecap="round" stroke-width="4"></path><circle cx="32" cy="39" fill="#40C8E0" r="2.7"></circle></svg></span><span class="brand-text">OneDrive Security Hub</span></div>
+<div class="footer-links">
+<a href="#overview">Guide</a>
+<a href="#methods">Methods</a>
+<a href="#comparison">Comparison</a>
+<a href="#faq">FAQ</a>
+<a href="#">Privacy Policy</a>
+<a href="#">Terms of Use</a>
+</div>
+<p class="footer-disclosure">
+        This site operates as an independent editorial resource. Some links may earn a referral commission at no cost to you. Product recommendations reflect editorial judgment and independent assessment.
+      </p>
+<p style="font-size: 13px; color: rgba(255,255,255,0.4);">
+        Folder Lock is developed by <a href="https://newsoftwares.net/" rel="noopener noreferrer" style="color: var(--color-secondary-accent);" target="_blank">NewSoftwares.net</a>.<br/>
+        © 2026 OneDriveSecurityHub.
+      </p>
+</div>
+</footer>
+<script defer="">
+    document.addEventListener('DOMContentLoaded', () => {
+      const header = document.querySelector('.site-header');
+      const menu = document.getElementById('nav-menu');
+      const toggle = document.getElementById('mobile-toggle');
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          header.style.boxShadow = '0 18px 42px rgba(8, 0, 26, 0.35)';
+        } else {
+          header.style.boxShadow = '0 10px 34px rgba(8, 0, 26, .28)';
+        }
+      }, { passive: true });
+
+      if (toggle && menu) {
+        toggle.addEventListener('click', () => menu.classList.toggle('active'));
+      }
+
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          const selector = this.getAttribute('href');
+          if (!selector || selector === '#') return;
+          const target = document.querySelector(selector);
+          if (!target) return;
+          e.preventDefault();
+          if (menu) menu.classList.remove('active');
+          const headerOffset = 82;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        });
+      });
+
+      document.querySelectorAll('.method-header h3').forEach(heading => {
+        if (heading.parentNode.querySelector('.difficulty-badge')) return;
+        const difficulty = parseInt(heading.getAttribute('data-difficulty')) || 1;
+        const textLabel = difficulty === 1 ? 'EASY' : difficulty === 2 ? 'MODERATE' : 'ADVANCED';
+        const badge = document.createElement('div');
+        badge.className = 'difficulty-badge';
+        let barsHtml = '';
+        for (let i = 1; i <= 3; i++) {
+          barsHtml += `<div class="diff-bar b${i} ${i <= difficulty ? 'filled' : ''}"></div>`;
+        }
+        badge.innerHTML = `<span>${textLabel}</span> <div class="diff-bars">${barsHtml}</div>`;
+        heading.parentNode.insertBefore(badge, heading.nextSibling);
+      });
+
+      // Hero glowing orb follows the pointer with a subtle lerp effect on desktop.
+      const hero = document.querySelector('.hero');
+      const canTrackOrb = hero && window.matchMedia('(min-width: 769px)').matches;
+      if (canTrackOrb) {
+        let targetX = 50, targetY = 32, currentX = 50, currentY = 32;
+        hero.addEventListener('mousemove', (event) => {
+          const rect = hero.getBoundingClientRect();
+          targetX = ((event.clientX - rect.left) / rect.width) * 100;
+          targetY = ((event.clientY - rect.top) / rect.height) * 100;
+        }, { passive: true });
+        function animateOrb() {
+          currentX += (targetX - currentX) * 0.15;
+          currentY += (targetY - currentY) * 0.15;
+          hero.style.setProperty('--orb-x', `${currentX}%`);
+          hero.style.setProperty('--orb-y', `${currentY}%`);
+          requestAnimationFrame(animateOrb);
+        }
+        requestAnimationFrame(animateOrb);
+      }
+
+      // Trust stat counters.
+      const counters = document.querySelectorAll('.stat-number[data-count]');
+      const counterObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = parseInt(el.dataset.count, 10) || 0;
+          const duration = 1200;
+          const start = performance.now();
+          const tick = (now) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.round(target * eased).toLocaleString();
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          observer.unobserve(el);
+        });
+      }, { threshold: 0.45 });
+      counters.forEach(counter => counterObserver.observe(counter));
+
+      // How-it-works scroll fill line.
+      const progressLine = document.querySelector('.step-progress-line');
+      const stepsTrack = document.querySelector('.steps-track');
+      if (progressLine && stepsTrack) {
+        const updateLine = () => {
+          const rect = stepsTrack.getBoundingClientRect();
+          const viewport = window.innerHeight || document.documentElement.clientHeight;
+          const progress = Math.min(Math.max((viewport * 0.72 - rect.top) / Math.max(rect.height, 1), 0), 1);
+          progressLine.style.strokeDashoffset = 1 - progress;
+        };
+        updateLine();
+        window.addEventListener('scroll', updateLine, { passive: true });
+        window.addEventListener('resize', updateLine);
+      }
+
+      // FAQ open state with gradient pulse.
+      document.querySelectorAll('.faq-card').forEach(card => {
+        const btn = card.querySelector('.faq-toggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          const isOpen = card.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(isOpen));
+          if (isOpen) {
+            card.style.animation = 'none';
+            card.offsetHeight;
+            card.style.animation = '';
+          }
+        });
+      });
+
+      // Matrix Widget Tab Switcher
+      window.switchTab = function(tabId) {
+        document.querySelectorAll('.matrix-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.matrix-content').forEach(c => c.classList.remove('active'));
+        const trigger = window.event && window.event.target ? window.event.target : null;
+        if (trigger && trigger.classList.contains('matrix-tab')) trigger.classList.add('active');
+        const panel = document.getElementById(tabId);
+        if (panel) panel.classList.add('active');
+      };
+    });
+</script>
+<!-- Schema Data -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "OneDriveSecurityHub",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://example.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "name": "How to Lock and Password Protect a Folder in OneDrive",
+        "description": "Learn how to lock a folder in OneDrive using Personal Vault, built-in features, and third-party encryption to secure your cloud files."
+      },
+      {
+        "@type": "Article",
+        "headline": "How to Lock and Password Protect a Folder in OneDrive",
+        "author": { "@type": "Person", "name": "Editorial Team" },
+        "datePublished": "2026-05-01T08:00:00+08:00",
+        "dateModified": "2026-05-22T08:00:00+08:00",
+        "publisher": {
+          "@type": "Organization",
+          "name": "NewSoftwares.net"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Cloud Security Guides"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "How to Lock a Folder in OneDrive"
+          }
+        ]
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Lock OneDrive Folder with Password",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "Create a Local Locker",
+            "text": "Open Folder Lock and create a new Locker. Save this Locker file directly inside your local OneDrive sync folder."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Mount and Add Files",
+            "text": "Open the Locker to mount it as a virtual drive. Drag your sensitive files into this drive."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Close to Encrypt and Sync",
+            "text": "Close the Locker to encrypt the container. OneDrive will sync the encrypted file to the cloud."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Does OneDrive have a built-in folder lock feature?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "For personal accounts, yes—it is called Personal Vault. It requires two-factor authentication to open. However, standard folders cannot be password-protected natively without third-party software."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can cloud service employees access my files?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "By default, data is encrypted at rest on Microsoft's servers, but Microsoft holds the keys. Under specific legal circumstances or security audits, they technically can access standard files. If you use client-side encryption (like Folder Lock), they cannot read your data under any circumstances."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</body>
+</html>
