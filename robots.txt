@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://how-to-lock-and-password-protect-folder-onedrive.vercel.app/sitemap.xml
